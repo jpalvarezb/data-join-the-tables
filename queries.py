@@ -1,8 +1,7 @@
 # pylint:disable=C0111,C0103
 
 def detailed_orders(db):
-    '''return a list of all orders (order_id, customer.contact_name,
-    employee.firstname) ordered by order_id'''
+    '''return a list of all orders ordered by order id'''
     query = '''
         SELECT
             o.OrderID,
@@ -18,18 +17,13 @@ def detailed_orders(db):
     return result
 
 def spent_per_customer(db):
-    '''return the total amount spent per customer ordered by ascending total
-    amount (to 2 decimal places)
-    Exemple :
-        Jean   |   100
-        Marc   |   110
-        Simon  |   432
-        ...
-    '''
+    '''return the total amount spent per customer ordered by ascending order'''
     query = '''
         SELECT
             Customers.ContactName AS name,
-            ROUND(SUM(OrderDetails.Quantity * OrderDetails.UnitPrice),2) AS amount
+            ROUND(
+                SUM(OrderDetails.Quantity * OrderDetails.UnitPrice),2)
+                AS amount
         FROM
             Orders o
         JOIN Customers ON Customers.CustomerID = o.CustomerID
@@ -44,13 +38,14 @@ def spent_per_customer(db):
     return result
 
 def best_employee(db):
-    '''Implement the best_employee method to determine who\'s the best employee! By “best employee”, we mean the one who sells the most.
-    We expect the function to return a tuple like: ('FirstName', 'LastName', 6000 (the sum of all purchase)). The order of the information is irrelevant'''
+    '''Returns employee who sells the most'''
     query = '''
         SELECT
             Employees.FirstName,
             Employees.LastName,
-            ROUND(SUM(OrderDetails.Quantity * OrderDetails.UnitPrice), 2) AS sales
+            ROUND(
+                SUM(OrderDetails.Quantity * OrderDetails.UnitPrice), 2)
+                AS sales
         FROM
             Orders o
         JOIN Employees ON Employees.EmployeeID = o.EmployeeID
@@ -66,9 +61,8 @@ def best_employee(db):
     return result
 
 def orders_per_customer(db):
-    '''Return a list of tuples where each tuple contains the contactName
-    of the customer and the number of orders they made (contactName,
-    number_of_orders). Order the list by ascending number of orders'''
+    '''Returns a list of customers with their name and ordered
+    by their order count'''
     query = '''
     SELECT
         c.ContactName AS name,
